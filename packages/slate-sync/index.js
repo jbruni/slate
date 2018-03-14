@@ -1,8 +1,11 @@
 /* eslint-disable */
 const prompt = require('react-dev-utils/prompt');
+const chalk = require('chalk');
+const figures = require('figures');
 const themekit = require('@shopify/themekit').command;
 const slateEnv = require('@shopify/slate-env');
 const config = require('./slate-sync.config');
+const promptIfSettingsData = require('./prompt-if-settings-data');
 
 let deploying = false;
 let filesToDeploy = [];
@@ -60,50 +63,54 @@ function deploy(cmd = '', files = []) {
   }
 
   deploying = true;
-
-  return new Promise((resolve, reject) => {
-    themekit(
-      {
-        args: [
-          'configure',
-          ..._generateConfigFlags(),
-          ..._generateIgnoreFlags(),
-        ],
-        cwd: config.paths.dist,
-      },
-      () => {
-        themekit(
-          {
-            args: [
-              cmd,
-              '--no-update-notifier',
-              ..._generateConfigFlags(),
-              ...files,
-            ],
-            cwd: config.paths.dist,
-          },
-          err => {
-            deploying = false;
-
-            if (err) {
-              reject(err);
-            } else {
-              resolve();
-            }
-          }
-        );
-      }
+  return promptIfSettingsData(files).then(files => {
+    console.log(
+      chalk.magenta(`\n${figures.arrowUp}  Uploading to Shopify...\n`)
     );
-  })
-    .then(() => {
-      deploying = false;
-      return maybeDeploy();
+    return new Promise((resolve, reject) => {
+      themekit(
+        {
+          args: [
+            'configure',
+            ..._generateConfigFlags(),
+            ..._generateIgnoreFlags(),
+          ],
+          cwd: config.paths.dist,
+        },
+        () => {
+          themekit(
+            {
+              args: [
+                cmd,
+                '--no-update-notifier',
+                ..._generateConfigFlags(),
+                ...files,
+              ],
+              cwd: config.paths.dist,
+            },
+            err => {
+              deploying = false;
+
+              if (err) {
+                reject(err);
+              } else {
+                resolve();
+              }
+            }
+          );
+        }
+      );
     })
-    .catch(err => {
-      deploying = false;
-      console.error(err);
-      return maybeDeploy();
-    });
+      .then(() => {
+        deploying = false;
+        return maybeDeploy();
+      })
+      .catch(err => {
+        deploying = false;
+        console.error(err);
+        return maybeDeploy();
+      });
+  });
 }
 
 module.exports = {
