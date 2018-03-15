@@ -115,22 +115,22 @@ module.exports = merge(
       new ExtractTextPlugin('styles.css.liquid'),
 
       // generate dist/layout/*.liquid for all layout files with correct paths to assets
-      ...fs.readdirSync(config.paths.layouts).map(filename => {
-        return new HtmlWebpackPlugin({
-          excludeChunks: ['static'],
-          filename: `../layout/${filename}`,
-          template: `./layout/${filename}`,
-          inject: true,
-          minify: {
-            removeComments: true,
-            collapseWhitespace: true,
-            removeAttributeQuotes: true,
-            // more options:
-            // https://github.com/kangax/html-minifier#options-quick-reference
-          },
-          // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-          chunksSortMode: 'dependency',
-        });
+
+      new HtmlWebpackPlugin({
+        excludeChunks: ['static'],
+        filename: `../snippets/script-tags.liquid`,
+        template: `./snippets/script-tags.html`,
+        inject: false,
+        minify: {
+          removeComments: true,
+          collapseWhitespace: true,
+          removeAttributeQuotes: false,
+          preserveLineBreaks: true,
+          // more options:
+          // https://github.com/kangax/html-minifier#options-quick-reference
+        },
+        // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+        chunksSortMode: 'dependency',
       }),
 
       new HtmlWebpackIncludeAssetsPlugin({

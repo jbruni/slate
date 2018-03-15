@@ -76,8 +76,58 @@ module.exports = generate({
           id: 'entrypoints',
           items: [
             {
-              id: 'scripts',
-              default: resolveTheme('src/assets/scripts/theme.js'),
+              id: '404',
+              default: resolveTheme('src/assets/scripts/templates/404.js'),
+            },
+            {
+              id: 'article',
+              default: resolveTheme('src/assets/scripts/templates/article.js'),
+            },
+            {
+              id: 'blog',
+              default: resolveTheme('src/assets/scripts/templates/blog.js'),
+            },
+            {
+              id: 'cart',
+              default: resolveTheme('src/assets/scripts/templates/cart.js'),
+            },
+            {
+              id: 'collection',
+              default: resolveTheme(
+                'src/assets/scripts/templates/collection.js',
+              ),
+            },
+            {
+              id: 'gift_card',
+              default: resolveTheme(
+                'src/assets/scripts/templates/gift_card.js',
+              ),
+            },
+            {
+              id: 'index',
+              default: resolveTheme('src/assets/scripts/templates/index.js'),
+            },
+            {
+              id: 'list-collections',
+              default: resolveTheme(
+                'src/assets/scripts/templates/list-collections.js',
+              ),
+            },
+            {
+              id: 'page',
+              default: resolveTheme('src/assets/scripts/templates/page.js'),
+            },
+            {
+              id: 'password',
+              default: resolveTheme('src/assets/scripts/templates/password.js'),
+            },
+            {
+              id: 'product',
+              default: resolveTheme('src/assets/scripts/templates/product.js'),
+            },
+            {
+              id: 'search',
+              default: resolveTheme('src/assets/scripts/templates/search.js'),
             },
             {
               id: 'static',
@@ -120,6 +170,10 @@ module.exports = generate({
         {
           id: 'nodeModules',
           items: [
+            {
+              id: 'repo',
+              default: path.resolve(__dirname, '../../node_modules'),
+            },
             {
               id: 'app',
               default: resolveTheme('node_modules'),

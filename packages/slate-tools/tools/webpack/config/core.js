@@ -62,10 +62,20 @@ function contextReplacementPlugins() {
   return plugins;
 }
 
+const entrypoints = {};
+for (const entrypoint in config.paths.entrypoints) {
+  if (
+    config.paths.entrypoints.hasOwnProperty(entrypoint) &&
+    fs.existsSync(config.paths.entrypoints[entrypoint])
+  ) {
+    entrypoints[entrypoint] = config.paths.entrypoints[entrypoint];
+  }
+}
+
 module.exports = {
   context: paths.src,
 
-  entry: config.paths.entrypoints,
+  entry: entrypoints,
 
   output: {
     filename: '[name].js',
@@ -104,12 +114,7 @@ module.exports = {
       },
       {
         test: config.regex.static,
-        // excluding layout/*.liquid files as they are also being emitted by the HtmlWebpackPlugin
-        exclude: commonExcludes(
-          ...fs
-            .readdirSync(config.paths.layouts)
-            .map(filename => `layout/${filename}`),
-        ),
+        exclude: commonExcludes(),
         loader: 'file-loader',
         options: {
           name: '../[path][name].[ext]',
@@ -122,11 +127,6 @@ module.exports = {
         options: {
           name: '[name].[ext]',
         },
-      },
-      {
-        test: /layout\/.*?\.liquid$/,
-        exclude: commonExcludes(),
-        loader: 'raw-loader',
       },
       {
         test: /\.liquid$/,

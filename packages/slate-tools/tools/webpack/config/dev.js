@@ -67,13 +67,16 @@ module.exports = merge(
 
       new webpack.NoEmitOnErrorsPlugin(),
 
-      ...fs.readdirSync(config.paths.layouts).map(filename => {
-        return new HtmlWebpackPlugin({
-          excludeChunks: ['static'],
-          filename: `../layout/${filename}`,
-          template: `./layout/${filename}`,
-          inject: true,
-        });
+      new HtmlWebpackPlugin({
+        excludeChunks: ['static'],
+        filename: `../snippets/script-tags.liquid`,
+        template: `./snippets/script-tags.html`,
+        inject: false,
+        minify: {
+          removeComments: true,
+          removeAttributeQuotes: false,
+        },
+        isDevServer: true,
       }),
     ],
   },
